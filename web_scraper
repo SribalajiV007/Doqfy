@@ -1,0 +1,29 @@
+import requests
+from bs4 import BeautifulSoup
+import time
+
+def scrape_nifty():
+    url = "https://www.nseindia.com/market-data/live-equity-market"
+    headers = {"User-Agent": "Mozilla/5.0"}
+
+    response = requests.get(url, headers=headers)
+
+    if response.status_code == 200:
+        soup = BeautifulSoup(response.content, 'html.parser')
+        nifty_table = soup.find('table')  # Adjust this selector if necessary
+
+        for row in nifty_table.find_all('tr')[1:]
+            columns = row.find_all('td')
+            if columns:
+                print(f"{columns[0].text.strip()}: {columns[1].text.strip()}")
+    else:
+        print("Failed to retrieve data.")
+
+def main():
+    while True:
+        print("Scraping Nifty 50 data...")
+        scrape_nifty()
+        print("Waiting for 5 minutes before the next scrape")
+        time.sleep(300)  # Wait for 5 minutes
+
+main()
